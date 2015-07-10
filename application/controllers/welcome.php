@@ -2,26 +2,39 @@
 
 class Welcome extends CI_Controller {
 
-	/**
-	 * Index Page for this controller.
-	 *
-	 * Maps to the following URL
-	 * 		http://example.com/index.php/welcome
-	 *	- or -  
-	 * 		http://example.com/index.php/welcome/index
-	 *	- or -
-	 * Since this controller is set as the default controller in 
-	 * config/routes.php, it's displayed at http://example.com/
-	 *
-	 * So any other public methods not prefixed with an underscore will
-	 * map to /index.php/welcome/<method_name>
-	 * @see http://codeigniter.com/user_guide/general/urls.html
-	 */
+
+	public function create(){
+
+		if(!user()){
+			redirect();
+		}
+
+    $content = $this->input->post('content');
+
+    if(!$content){
+      redirect();
+    }
+
+    $this->load->model('message');
+    date_default_timezone_set('Asia/Taipei');
+    $data = array(
+      'user_id'=>user()->id,
+      'content'=>$content,
+      'created_at'=>date('Y-m-d H:i:s')
+      );
+    $this->message->create($data);
+
+    redirect();
+
+	}
+
 	public function index()
 	{
-		$this->load->view('welcome_message');
+    $this->load->model('message');
+    $messages =$this->message->all();
+		$this->load->view('welcome_message',array(
+      'messages'=>$messages
+      ));
 	}
 }
 
-/* End of file welcome.php */
-/* Location: ./application/controllers/welcome.php */
