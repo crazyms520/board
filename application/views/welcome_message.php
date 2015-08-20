@@ -129,7 +129,7 @@
 					<div class='content'><?php echo $message->content;?></div>
 					<div class='created_at'><?php echo $message->created_at;?></div>
 					<?php if ($message->picture) { ?>
-					<img src='images/<?php echo $message->picture?>'>
+					<img src='images/<?php echo $message->picture;?>'>
 					<?php  } ?>
 				</div>
 		<?php }
