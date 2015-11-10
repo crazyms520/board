@@ -5,7 +5,7 @@
     <title>訪客留言表</title>
     <script type="text/javascript">
       function check_data(){
-        if(document.myForm.author.value.length == 0)
+        if(document.myForm.userid.value.length == 0)
           alert("作者欄位不可空白！");
         else if (document.myForm.subject.value.length == 0)
           alert("主題欄位不可空白！");
@@ -27,11 +27,13 @@
       else
         $page = 1;
 
-
-      $link = @mysql_connect("127.0.0.1","root","0000") or die ("無法建立連接");
-      mysql_select_db("board",$link) or die ('開啟失敗'.mysql_error($link));
-      $result = mysql_query("SELECT * FROM messages",$link);
-
+      require_once('db.php');
+      // $link = @mysql_connect("127.0.0.1","root","0000") or die ("無法建立連接");
+      // mysql_select_db("board",$link) or die ('開啟失敗'.mysqli_error($link));
+      // $result = mysql_query("SELECT * FROM messages INNER JOIN users ON users.id=messages.user_id ORDER BY created_at DESC",$link);
+      $link = create_connection();
+      $sql = "SELECT * FROM messages INNER JOIN users ON users.id=messages.user_id ORDER BY created_at DESC";
+      $result = excute_sql("board",$sql,$link);
       $total_records = mysql_num_rows($result) ;
 
       $total_pages = ceil($total_records/$records_per_page);
@@ -51,7 +53,7 @@
       $j=1;
       while ($row = mysql_fetch_array($result) and $j <= $records_per_page) {
         echo "<tr bgcolor='".$bg[$j-1]."'>";
-        echo"<td width='120' align='center'>".$row["id"]."<br>"."user_id:".$row["user_id"]."<br>"."content:".$row["content"]."</td>","</tr>";
+        echo"<td width='120' align='center'>"."author:".$row["name"]."<br>"."content:".$row["content"]."<br>".$row['created_at']."</td>","</tr>";
         $j++;
       }
       echo "</table>";
@@ -82,7 +84,7 @@
           <tr bgcolor='#D9F2FF'>
             <td width='15%'>作者</td>
             <td width='85%'>
-              <input name='author' type='text' size='50'>
+              <input name='userid' type='text' size='50'>
             </td>
           </tr>
           <tr bgcolor='#84D7FF'>
