@@ -36,7 +36,7 @@
 
     $total_pages = ceil($total_records/$records_per_page);
 
-    $start_record = $records_per_page*($page - 1);
+    $started_record = $records_per_page*($page - 1);
 
     mysql_data_seek($result,$started_record);
 
@@ -60,7 +60,58 @@
       echo $row["id"]."'>閱讀與加入討論</a></td></tr>";
       $j++;
     }
-    echo "</table>"
+    echo "</table>";
+
+    echo "<p align='center'>";
+    if($page > 1)
+        echo "<a style='text-decoration:none' href='news.php?page=".($page-1)."'>下一頁</a>";
+    for($i = 1 ; $i <=$total_pages; $i++){
+      if($i == $page)
+        echo "$i";
+      else
+        echo "<a style='text-decoration:none' href='news.php?page=$i'>$i</a>";
+    }
+    if($page < $total_pages)
+      echo "<a style='text-decoration:none'hrfe='news.php?page=".($page + 1)."'>下一頁</a>";
+
+    echo "</p>";
+
+    mysql_free_result($result);
+    mysql_close($link);
     ?>
+    <hr>
+    <form name="myForm" method='post' action='news_post.php'>
+      <table border='0' width='800' align='center' cellspacing='0'>
+        <tr bgcolor="#0084CA" align='center'>
+          <td colspan='2'><font color='white'>請在此輸入新的討論區</td>
+        </tr>
+        <tr bgcolor='#D9F2FF'>
+            <td width='15%'>作者</td>
+            <td width='85%'>
+              <input name='author' type='text' size='50'>
+            </td>
+          </tr>
+          <tr bgcolor='#84D7FF'>
+            <td width='15%'>主題</td>
+            <td width='85%'>
+              <input name='subject' type='text' size='50'>
+            </td>
+          </tr>
+          <tr bgcolor='#D9F2FF'>
+            <td width='15%'>內容</td>
+            <td width='85%'>
+              <textarea name='content' cols='50' rows='5'></textarea>
+            </td>
+          </tr>
+          <tr>
+            <td colspan='2' height='40' align="center">
+              <input type='button' value='張貼討論' onclick="check_data()">
+              <input type='reset' value='重新輸入'>
+            </td>
+          </tr>
+      </table>
+
+    </form>
+
   </body>
 </html>
